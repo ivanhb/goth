@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>goth</title>
+
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+
+    <link rel=stylesheet type=text/css href="{{ url_for('.static', filename='css/bootstrap.min.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('.static', filename='css/index.css') }}">
+
+    <script src="{{ url_for('.static', filename='js/jquery2-2-4.min.js') }}"></script>
+    <script src="{{ url_for('.static', filename='js/bootstrap.min.js') }}"></script>
+
+  </head>
+
+  <body>
+
+    <div class="onepage">
+      <div class="tool-header"><span class="goth-style">Goth</span>, the Graphml Ontologies Tool-Handler</div>
+
+      <div class="section" id="elaborate_grml">
+        <div class="item-header"><div value="-" class="menu-icon"></div>Process a <span class="graph-style">.GRAPHML</span> file <span value="closed" class="menu-icon end">></span></div>
+        <div class="container">
+          <div id="select_gr" class="opt">
+            <div class="opt-header">1. Select your GRAPHML</div>
+
+            <table class="opt-container">
+              <tr class="operation">
+                <td><button id="select_local_gr_btn" class="main-opr" onclick="document.getElementById('select_local_gr_input').click();">Select a local file</button></td>
+                <td class="operation-options"><input type="file" id="select_local_gr_input" accept=".graphml"></td></td>
+              </tr>
+              <!--
+              <tr class="operation">
+                <td><button class="intro-lbl">Convert it to XML/RDF format</button></td>
+                <td class="operation-options">
+                  <div>I am converting it ...</div>
+                </td>
+              </tr>
+              -->
+            </table>
+          </div>
+          <div id="select_operation" class="opt">
+            <div class="opt-header">2. What you want to do?</div>
+            <table class="opt-container">
+              <tr class="operation">
+                <td><button id="select_dest_jago_btn" class="main-opr">Convert it to Jago format</button></td>
+                <td class="operation-options"><input type="file" id="select_dest_jago_input" webkitdirectory directory multiple/></td>
+              </tr>
+              <!--
+              <tr class="operation">
+                <td><button class="intro-lbl">Convert it to XML/RDF format</button></td>
+                <td class="operation-options">
+                  <div>I am converting it ...</div>
+                </td>
+              </tr>
+              -->
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="section" id="add_gr_item">
+        <div class="item-header"><div value="-" class="menu-icon"></div>Add a new item to the <span class="graph-style">Graph</span></div>
+        <div class="container">
+          <div id="select_gr" class="opt">
+            <div class="opt-header">1. Select your GRAPH</div>
+
+            <table class="opt-container">
+              <tr class="operation">
+                <td><button id="select_local_add_gr_btn" class="main-opr" onclick="document.getElementById('select_local_add_gr_jago_input').click();">Select the Jago model index file</button></td>
+                <td class="operation-options"><input type="file" id="select_local_add_gr_jago_input" accept=".json"></td></td>
+              </tr>
+            </table>
+          </div>
+          <div id="add_operation" class="opt">
+            <div class="opt-header">2. Add your item</div>
+            <table id="add_jago_item_container" class="opt-container">
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+    <script src="{{ url_for('.static', filename='js/main.js') }}"></script>
+  </body>
+
+</html>
