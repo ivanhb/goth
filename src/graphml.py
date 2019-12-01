@@ -8,10 +8,10 @@ class Graphml(object):
     OBJECT_PROP_KEY = "@"
     SUBCLASS_KEY = "@isSubclassOf"
     DATATYPES = {
-        "string":{"default":""},
-        "int":{"default":-1},
-        "datetime":{"default":-1},
-        "url":{"default":-1}
+        "string":{"default":"string"},
+        "int":{"default":"int"},
+        "datetime":{"default":"datetime"},
+        "url":{"default":"url"}
     }
 
     def __init__(self, input, is_path = True):
@@ -125,8 +125,10 @@ class Graphml(object):
                     if (dp["source"] == c["id"]):
                         for dp_val in dp["value"]:
                             default_value = -1
-                            if dp_val in self.DATATYPES:
-                                default_value = self.DATATYPES[dp["value"]]
+                            target_dp_node = _find_elem(owl_gr["datatypes"],"id",dp["target"])
+                            if target_dp_node != -1:
+                                if target_dp_node["value"] in self.DATATYPES:
+                                    default_value = self.DATATYPES[target_dp_node["value"]]["default"]
                             classes_index[c["value"]]["data_properties"][dp_val] = default_value
 
             #check object properties

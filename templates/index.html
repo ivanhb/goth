@@ -21,7 +21,7 @@
       <div class="section" id="elaborate_grml">
         <div class="item-header"><div value="-" class="menu-icon"></div>Process a <span class="graph-style">.GRAPHML</span> file <span value="closed" class="menu-icon end">></span></div>
         <div class="container">
-          <div id="select_gr" class="opt">
+          <div id="select_gr" class="opt definition">
             <div class="opt-header">1. Select your GRAPHML</div>
 
             <table class="opt-container">
@@ -39,7 +39,7 @@
               -->
             </table>
           </div>
-          <div id="select_operation" class="opt">
+          <div id="select_operation" class="opt elaboration">
             <div class="opt-header">2. What you want to do?</div>
             <table class="opt-container">
               <tr class="operation">
@@ -62,20 +62,20 @@
       <div class="section" id="add_gr_item">
         <div class="item-header"><div value="-" class="menu-icon"></div>Add a new item to the <span class="graph-style">Graph</span></div>
         <div class="container">
-          <div id="select_gr" class="opt">
+          <div id="select_gr" class="opt definition">
             <div class="opt-header">1. Select your GRAPH</div>
 
             <table class="opt-container">
               <tr class="operation">
-                <td><button id="select_local_add_gr_btn" class="main-opr" onclick="document.getElementById('select_local_add_gr_jago_input').click();">Select the Jago model index file</button></td>
-                <td class="operation-options"><input type="file" id="select_local_add_gr_jago_input" accept=".json"></td></td>
+                <td><button id="select_local_add_gr_btn" class="main-opr" onclick="document.getElementById('select_local_add_gr_jago_input').click();">Select the Jago model directory</button></td>
+                <td class="operation-options"><input type="file" id="select_local_add_gr_jago_input" name="fileList" webkitdirectory multiple /></td></td>
               </tr>
             </table>
           </div>
-          <div id="add_operation" class="opt">
-            <div class="opt-header">2. Add your item</div>
-            <table id="add_jago_item_container" class="opt-container">
-            </table>
+          <div id="add_operation" class="opt elaboration">
+            <div class="header-addopr">Select the class of item you want to add</div>
+            <table id="add_jago_item_container" class="opt-container"></table>
+            <div id="inboxes" class="attributes"></div>
           </div>
         </div>
       </div>

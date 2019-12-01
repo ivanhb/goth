@@ -7,23 +7,24 @@ body{
     opacity: 0.6;
 }
 #add_operation{
-    
+
 }
 
 input{
     visibility:hidden;
 }
+
 .goth-style{
     font-size: 28pt;
-    color: #59a593;
+    color: #B560BB;
 }
 
 .onepage{
-    background-color: #F0FAF7;
-    padding-top: 50px;
+    background-color: #FAFDFD;
+    padding-top: 20px;
     padding-right: 50px;
     padding-left: 50px;
-    width: 70%;
+    width: 90%;
     margin: 0 auto;
     border: 1.5px solid #A8AFAC;
 }
@@ -46,11 +47,11 @@ input{
     display: inline-block;
     width: 20px;
     height: 15px;
-    background-color:#59a593;
+    background-color:#B560BB;
     margin-right: 10px;
 }
-.section#add_gr_item .menu-icon {
-    background-color:#a5596b;
+.section#add_gr_item .menu-icon{
+    background-color:#B560BB;
 }
 
 .menu-icon.end{
@@ -74,24 +75,24 @@ input{
 
 .main-opr{
     font-size: 13pt;
-    background-color: #59a593;
+    background-color: #B560BB;
     height: 50px;
     min-width: 30px;
     color: white;
     opacity: 1!important;
 }
 .section#add_gr_item .main-opr{
-    background-color:#a5596b;
+    background-color:#B560BB;
 }
 .main-opr:hover:not([disabled]){
     background-color: white !important;
-    border: solid 2px #59a593;
-    color: #59a593;
+    border: solid 2px #B560BB;
+    color: #B560BB;
 }
 
 .secondary-opr{
     font-size: 13pt;
-    background-color: #59a593;
+    background-color: #B560BB;
     height: 50px;
     min-width: 30px;
     color: white;
@@ -109,4 +110,76 @@ input{
     border-spacing:20px 10px;
     vertical-align:top;
     display: inline-block;
+}
+
+#add_operation{
+  display: none;
+}
+#add_operation .opt-container{
+    margin-top: 20px;
+    display: inline-block!important;
+    width: fit-content;
+    border-right: 1.5px #A8AFAC solid;
+}
+#add_jago_item_container{
+    border-collapse:separate!important;
+    border-spacing:30px 2px;
+}
+#add_operation .opt-container button{
+    background-color:#DADA7B;
+    min-width: 100px;
+    border: solid 1px gray;
+}
+#add_operation .opt-container button:hover{
+    background-color: white;
+}
+.child-tr{
+    height: 30px;
+    border-right: #A8AFAC solid 10px;
+    display:inline-block;
+    margin-right: 1px;
+}
+.header-addopr{
+    font-size: 14pt;
+    margin-top: 10px;
+}
+
+
+
+/* data-prop/object-prop to add section*/
+.attributes{
+    display: inline-block;
+}
+.att-container{
+    padding: 10px;
+}
+.att-container .data-property{
+    background-color: #ACE0C6;
+    padding: 5px;
+    width: fit-content;
+    border-radius: 5px;
+    display: inline-block;
+    color: black;
+}
+
+.att-container input{
+    margin-left: 20px;
+    visibility: visible;
+    min-width: 200px;
+}
+.objs-container{
+    margin-top: 20px;
+    margin-left: 10px;
+}
+.objs-container .btn{
+    background-color: #ACC6E0;
+    margin-right: 20px;
+}
+
+
+#add_class_item{
+    margin-top: 50px;
+    margin-left: 10px;
+    min-width: 100px;
+    float: right;
 }
