@@ -21,9 +21,9 @@ class Jago(object):
         except:
             return False
 
+    #The following two methods are used if <jago_model_path> was not specified during initialization
     def def_model_index(self, json_file):
         self.model_index = json.load(json_file)
-
     def def_class_index(self, json_file, class_name):
         self.class_index[class_name] = json_file
 

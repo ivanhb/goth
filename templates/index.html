@@ -64,11 +64,11 @@
         <div class="container">
           <div id="select_gr" class="opt definition">
             <div class="opt-header">1. Select your GRAPH</div>
-
             <table class="opt-container">
               <tr class="operation">
-                <td><button id="select_local_add_gr_btn" class="main-opr" onclick="document.getElementById('select_local_add_gr_jago_input').click();">Select the Jago model directory</button></td>
-                <td class="operation-options"><input type="file" id="select_local_add_gr_jago_input" name="fileList" webkitdirectory multiple /></td></td>
+                <td><button id="select_local_add_gr_btn" class="main-opr" onclick="document.getElementById('select_local_add_gr_jago_input').click();">Select a Jago model-index file</button></td>
+                <td class="operation-options"><input type="file" id="select_local_add_gr_jago_input" name="fileList" accept=".json" /></td>
+                <td><div id="select_saved_graph" class="dropdown"><button class="main-opr gen btn btn-secondary dropdown-toggle" data-toggle="dropdown">Load a recent Graph <span class="caret"></span></button><ul class="dropdown-menu"></ul></div></td>
               </tr>
             </table>
           </div>

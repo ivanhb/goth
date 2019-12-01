@@ -4,10 +4,8 @@ var SUBCLASS_KEY = "@isSubclassOf"
 
 
 var CLASSES = {}
-
 var INTERFACE_DOM_INDEX = {};
 
-disable_switch(false,true);
 
 
 //When selecting a graphml file ->
@@ -37,131 +35,17 @@ jago_input.onclick = function(e) {
 //When selecting the jago index
 var jago_add_input = document.getElementById("select_local_add_gr_jago_input");
 jago_add_input.onchange = function(e) {
-  function rec_read(files,index) {
-    var a_file = files[index];
-    if (a_file.name.endsWith(".json")) {
-      var reader = new FileReader();
-      reader.readAsText(a_file,"UTF-8");
-      reader.onload = function() {
-        if(a_file.name != "index.json") {
-          $.post( "/defgraph", {file_pointer: a_file, a_file: reader.result, fname: a_file.name, fpath: a_file["webkitRelativePath"]}).done(function() {});
-        }
-        if (index < files.length - 1) {
-          return rec_read(files,index+1);
-        }else {
-          return 1;
-        }
-      }
-    }else {
-      return rec_read(files,index+1);
-    }
-  }
-
-  console.log(jago_add_input);
-  console.log(jago_add_input.files);
-  rec_read(jago_add_input.files,0,null);
-  for (var i = 0; i < jago_add_input.files.length; i++) {
-    if (jago_add_input.files[i].name == "index.json"){
-      var reader = new FileReader();
-      reader.readAsText(jago_add_input.files[i],"UTF-8");
-      reader.onload = function() {
-        JAGO_MODEL_INDEX = JSON.parse(reader.result);
-        console.log(JAGO_MODEL_INDEX);
-
-        var grouped_btns = [];
-        var all_btns = {};
-        var levels = {}
-        if ("class" in JAGO_MODEL_INDEX) {
-          var max_tree_length = 0;
-          for(class_k in JAGO_MODEL_INDEX["class"]){
-            CLASSES[class_k] = def_class(class_k, JAGO_MODEL_INDEX);
-            if (CLASSES[class_k]["tree"].length > max_tree_length) {
-              max_tree_length = CLASSES[class_k]["tree"].length;
-            }
-          }
-          console.log(CLASSES);
-          _iterate_by_tree(max_tree_length);
-          for (var i_level = 1; i_level < max_tree_length + 1; i_level++) {
-            levels[i_level] = {}
-            for (var i = 0; i < grouped_btns.length; i++) {
-
-              var item_index = grouped_btns[i].length - i_level;
-              var father_index = grouped_btns[i].length - i_level + 1;
-              var item = grouped_btns[i][grouped_btns[i].length - i_level];
-              var father = null;
-              if (item != undefined) {
-                if (father_index >= 0) {
-                  father = grouped_btns[i][father_index];
-                }
-                levels[i_level][item] = {"father":father};
-              }
-            }
-          }
-          function _iterate_by_tree(tree_l) {
-            if (tree_l == 0) {
-              return 1;
-            }else {
-              for (var class_k in CLASSES) {
-                if(CLASSES[class_k]["tree"].length == tree_l){
-                  grouped_btns.push(CLASSES[class_k]["tree"]);
-                }
-              }
-              _iterate_by_tree(tree_l - 1);
-            }
-          }
-        }
-
-        var jago_add_container = document.getElementById("add_jago_item_container");
-        if (Object.keys(levels).length > 0) {
-          var index_html_rows = {}
-          for (var i = 1; i < Object.keys(levels).length + 1; i++) {
-            for (var k_class in levels[i]) {
-
-              var tr = document.createElement("tr");
-              var a_btn = document.createElement("button");
-              a_btn.id = k_class;
-              a_btn.innerHTML = k_class;
-              a_btn.className = "btn btn-secondary";
-              a_btn.onclick = function(e) {
-                document.getElementById("inboxes").innerHTML = "";
-                //data_properties
-                var data_properties = build_html_data_properties(CLASSES[this.id]["data_properties"]);
-                //object_properties
-                var object_properties = build_html_object_properties(CLASSES[this.id]["object_properties"]);
-                //"add" and "cancel"
-                var add_btn = build_HTML_elem("Add", "add-class-item");
-                var cancel_btn = build_HTML_elem("Cancel", "cancel-add-item");
-
-                document.getElementById("inboxes").appendChild(data_properties);
-                document.getElementById("inboxes").appendChild(object_properties);
-                document.getElementById("inboxes").appendChild(add_btn.html_elems[0]);
-              };
-
-              var a_random_div = document.createElement("div");
-              a_random_div.className = "spacin-div";
-              a_random_div.setAttribute("style","display: inline-block;width:"+((i-1) * 50).toString()+"px");
-              tr.appendChild(a_random_div)
-              tr.appendChild(a_btn)
-
-              if (levels[i][k_class]["father"] != null) {
-                  a_random_div.className = "spacin-div child-tr";
-                  insert_dom_after(tr,document.getElementById(levels[i][k_class]["father"]));
-              }else {
-                  jago_add_container.appendChild(tr);
-              }
-            }
-          }
-
-          jago_add_container.style.display = "table";
-          document.getElementById("add_operation").style.display= "block";
-
-          disable_switch(true,false);
-
-        }
-      };
-      break;
-    }
-  }
+  var uploaded_file = jago_add_input.files[0];
+  console.log(uploaded_file);
+  $.post("/openGraph", {
+    graph: "jago",
+    name: uploaded_file.name,
+    size: uploaded_file.size,
+    lastModified: uploaded_file.lastModified
+  })
+  .done(function( res ) {
+    console.log(res);
+  });
 };
 
 
@@ -345,6 +229,16 @@ function build_HTML_elem(data, html_type) {
           elems.push(container);
       break;
 
+      case "saved-graph-dropdown-li":
+        //<li><a href="#">HTML</a></li>
+        var container = document.createElement("li");
+        var an_a = document.createElement("a");
+        an_a.setAttribute('href', '#');
+        an_a.innerHTML = data["label"];
+        container.appendChild(an_a);
+        elems.push(container);
+        break;
+
       case "dropdown-btn":
           var dropdown_menu_btn = document.createElement("button");
           //dropdown_menu_btn.id = data;
@@ -402,10 +296,26 @@ function build_HTML_elem(data, html_type) {
       return 1;
   }
 }
-
-
-
 //inserts a new node after the <referenceNode>
 function insert_dom_after(newNode, referenceNode) {
     referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
+
+
+// MAIN PROGRAM: default functions/operations
+// ------------------------------------------------
+
+//Get the last graphs elaborated
+$.get("/getSavedGraphs",{})
+.done(function( saved_graphs ) {
+  saved_graphs = JSON.parse(saved_graphs);
+  console.log(saved_graphs);
+  for (var i = 0; i < saved_graphs["items"].length; i++) {
+    var an_item = saved_graphs["items"][i];
+    $("#select_saved_graph .dropdown-menu").append(
+        build_HTML_elem({"label": an_item["name"]+"<br class='date'/>"+an_item["date"]}, "saved-graph-dropdown-li").html_elems[0]
+    );
+  }
+});
+
+disable_switch(false,true);

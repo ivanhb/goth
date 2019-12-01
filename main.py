@@ -12,6 +12,7 @@ import zipfile
 from threading import Timer
 from flask import Flask, render_template, request, json, jsonify, redirect, url_for, send_file, after_this_request
 import webbrowser
+from datetime import datetime
 
 from src.graphml import Graphml
 from src.jago import Jago
@@ -30,11 +31,14 @@ if (len(sys.argv) > 1):
 
 #For the "convert" functions
 a_Graphml = None
-
-#For the "add" functions
-a_Graph = {}
+SAVE_DIR = "data/.save/"
 
 
+#The graph to elaborate
+GRAPH = {}
+
+## General basic calls
+## -------------------
 @app.route('/shutdown')
 def shutdown():
     func = request.environ.get('werkzeug.server.shutdown')
@@ -51,7 +55,8 @@ def status():
 def index():
     return render_template('index.html')
 
-
+## Defining a Graph
+## -------------------
 @app.route('/processGraphml',methods = ['POST'])
 def process_graphml():
 
@@ -69,21 +74,41 @@ def process_graphml():
     else:
         return "No such operation!"
 
-@app.route('/defgraph', methods = ['POST'])
-def graph_def():
-    print(request.form['file_pointer'])
-    a_f_name = request.form['fname'];
-    a_f_path = request.form['fpath'];
+@app.route('/openGraph', methods = ['POST'])
+def open_new_graph():
+    g_type = request.form['graph']
+    a_file = {
+        "name": str(request.form['name']),
+        "size": str(request.form['size']),
+        "lastModified": str(request.form['lastModified'])
+    }
+    #search for the graph file
+    local_file = find_file(a_file)
+    if local_file != -1:
+        if(def_graph(local_file.replace("/"+a_file["name"],""), g_type)):    
+            save_graph(a_file["name"],g_type)
+            return "Graph loaded"
+    else:
+        return "File not found"
 
-    a_json = literal_eval(request.form['a_file']);
-    class_name = a_json["class"];
-    class_items = a_json["items"];
-    if class_name not in a_Graph:
-        a_Graph[class_name] = {"files":{}}
-    a_Graph[class_name]["files"][a_f_path] = class_items
+    return "Error"
 
-    return "Graph defined"
+@app.route('/openSavedGraph')
+def open_saved_graph():
+    g_id = request.args.get('graph_id')
+    a_graph = pick_saved_graph(g_id)
+    if def_graph(a_graph["name"], a_graph["type"]):
+        return "Graph loaded"
+    else:
+        return "Error in loading the graph"
 
+@app.route('/getSavedGraphs')
+def get_saved_graphs():
+    file = SAVE_DIR+"last.json"
+    return json.dumps(json.load(open(file)))
+
+## Processing a Graph
+## -------------------
 @app.route('/getListItems')
 def get_list_items():
     a_c_name = request.args.get('cName')
@@ -107,6 +132,8 @@ def add_jago_item():
         a_Jago.def_class_index()
 
 
+## Internal functions
+## -------------------
 def open_browser():
     dipam_url = "http://127.0.0.1:5000/"
     browser_path = [
@@ -150,14 +177,14 @@ def open_browser():
 
         webbrowser.open(dipam_url)
         return("Default browser")
-
-def find_file(file, path):
+def find_file(file, path = "/"):
+    print(file)
     for root, dirs, files in os.walk(path):
         for name in files:
             if file["name"] == name:
                 full_path = os.path.join(root, name)
                 #the size of the file
-                file_size = os.path.getsize(full_path)
+                file_size = str(os.path.getsize(full_path))
                 #time of the last modification
                 file_mtime = str(os.path.getmtime(full_path)).replace(".","")
 
@@ -165,7 +192,35 @@ def find_file(file, path):
                     return full_path;
 
     return -1
+def save_graph(name, type):
+    file = SAVE_DIR+"last.json"
+    saves = json.load(open(file))
+    saves["items"].append({"name":name,"date":datetime.now().strftime("%b %d %Y %H:%M:%S"),"type":type})
+    #save last 10 items
+    saves["items"] = saves["items"][-10:]
+    try:
+        with open(file, 'w') as f_saves:
+            json.dump(saves, f_saves)
+            return "Save done"
+    except Exception as e:
+        return "Save error"
+def pick_saved_graph(g_id):
+    file = SAVE_DIR+"last.json"
+    try:
+        saves = json.load(open(file))
+        wanted_graph = saves["items"][i]
+        #save it again to update the timeline
+        save_graph(wanted_graph["name"], wanted_graph["type"])
+        return wanted_graph
+    except Exception as e:
+        return -1
+def def_graph(value, g_type):
+    if g_type == "jago":
+        GRAPH = Jago(value)
+        if GRAPH != False:
+            return True
 
+    return False
 
 if __name__ == '__main__':
     #Timer(1, open_browser).start();
